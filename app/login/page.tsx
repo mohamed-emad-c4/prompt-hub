@@ -19,7 +19,7 @@ export default function LoginPage() {
         setIsLoading(true);
 
         // Simple authentication - in a real app, you'd use a proper auth system
-        if (username === "admin" && password === "password") {
+        if (username === "admin" && password === "mkomko9090") {
             // Set a cookie to indicate the admin is authenticated
             document.cookie = "admin_authenticated=true; path=/; max-age=3600"; // 1 hour
             router.push("/admin");
@@ -39,7 +39,7 @@ export default function LoginPage() {
                 <Card glass className="backdrop-blur-lg shadow-glass">
                     <CardHeader className="space-y-1 text-center">
                         <div className="mx-auto h-12 w-12 rounded-xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center mb-2 shadow-sm">
-                            <span className="text-white font-bold text-xl">P</span>
+                            <span className="text-black font-bold text-xl">P</span>
                         </div>
                         <CardTitle className="text-2xl font-bold">Admin Login</CardTitle>
                         <CardDescription>
@@ -116,23 +116,22 @@ export default function LoginPage() {
                             disabled={isLoading}
                         >
                             {isLoading ? (
-                                <div className="flex items-center">
-                                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                                <div className="flex items-center text-black" >
+                                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-black" fill="none" viewBox="0 0 24 24">
                                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                     </svg>
                                     Signing in...
                                 </div>
                             ) : (
-                                "Sign in"
+                                <div className="flex items-center text-black">
+                                    Sign in
+                                </div>
                             )}
                         </Button>
                     </CardFooter>
                     <div className="px-6 pb-6 text-center">
-                        <p className="text-xs text-gray-500">
-                            Demo credentials: username <span className="font-mono bg-gray-100 px-1 py-0.5 rounded text-gray-800">admin</span> /
-                            password <span className="font-mono bg-gray-100 px-1 py-0.5 rounded text-gray-800">password</span>
-                        </p>
+                        
                     </div>
                 </Card>
             </div>

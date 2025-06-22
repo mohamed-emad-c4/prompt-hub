@@ -58,7 +58,7 @@ export default async function Home() {
 
         <div className="relative px-4 py-16 sm:px-6 sm:py-24 lg:py-32 lg:px-8">
           <div className="max-w-3xl mx-auto text-center">
-            <h1 className="text-4xl font-extrabold text-white sm:text-5xl lg:text-6xl">
+            <h1 className="text-4xl font-extrabold text-black sm:text-5xl lg:text-6xl">
               Manage Your Prompts
             </h1>
             <p className="mt-6 text-xl text-primary-100 max-w-2xl mx-auto">

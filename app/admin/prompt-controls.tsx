@@ -33,7 +33,7 @@ export function AdminPromptControls({ prompt }: AdminPromptControlsProps) {
             router.refresh();
         } catch (error) {
             console.error("Error updating prompt status:", error);
-            // Handle error display to user here
+            // In a real app, you might want to display this error to the user
         }
     };
 
@@ -49,7 +49,7 @@ export function AdminPromptControls({ prompt }: AdminPromptControlsProps) {
             router.refresh();
         } catch (error) {
             console.error("Error deleting prompt:", error);
-            // Handle error display to user here
+            // In a real app, you might want to display this error to the user
         }
     };
 

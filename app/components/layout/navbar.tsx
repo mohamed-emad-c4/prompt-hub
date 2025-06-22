@@ -59,7 +59,7 @@ export function Navbar() {
                             d="M15.75 19.5L8.25 12l7.5-7.5"
                         />
                     </svg>
-                    <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-primary-800">
+                    <span className="text-xl font-bold bg-clip-text  bg-gradient-to-r from-primary-600 to-primary-800">
                         PromptHub
                     </span>
                 </Link>
@@ -92,7 +92,7 @@ export function Navbar() {
                             <Button
                                 variant="primary"
                                 size="sm"
-                                className="bg-primary-600 hover:bg-primary-700 text-white shadow-sm hover:shadow transition-all"
+                                className="bg-primary-600 hover:bg-primary-700 text-black shadow-sm hover:shadow transition-all"
                             >
                                 Login
                             </Button>

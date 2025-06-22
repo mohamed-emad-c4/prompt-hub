@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export function Footer() {
     return (
-        <footer className="border-t border-white/20 bg-white/80 backdrop-blur-md relative overflow-hidden">
+        <footer className="border-t border-white/20 bg-white backdrop-blur-md relative overflow-hidden">
             {/* Decorative elements */}
             <div className="absolute inset-0 z-0">
                 <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary-100 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
@@ -15,9 +15,9 @@ export function Footer() {
                         <Link href="/" className="flex items-center group mb-4">
                             <div className="flex items-center">
                                 <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center mr-2 shadow-sm">
-                                    <span className="text-white font-bold text-lg">P</span>
+                                    <span className="text-blue-900 font-bold text-lg">P</span>
                                 </div>
-                                <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-primary-800">
+                                <span className="text-xl text-black font-bold bg-clip-text  bg-gradient-to-r from-primary-600 to-primary-800 ">
                                     PromptHub
                                 </span>
                             </div>
