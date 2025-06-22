@@ -3,19 +3,10 @@
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/app/components/ui/button";
-
-// Define the shape of the prompt object
-interface Prompt {
-    id: number;
-    title: string;
-    content: string;
-    isPublished: boolean;
-    createdAt: Date;
-    updatedAt: Date;
-}
+import { PromptWithDetails } from "@/app/lib/types";
 
 interface AdminPromptControlsProps {
-    prompt: Prompt;
+    prompt: PromptWithDetails;
 }
 
 export function AdminPromptControls({ prompt }: AdminPromptControlsProps) {

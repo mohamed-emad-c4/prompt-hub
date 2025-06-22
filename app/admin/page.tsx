@@ -3,18 +3,22 @@ import { db } from "@/app/lib/db";
 import { Button } from "@/app/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/app/components/ui/card";
 import { AdminPromptControls } from "./prompt-controls";
+import { PromptWithDetails } from "@/app/lib/types";
 
-async function getPrompts() {
+async function getPrompts(): Promise<PromptWithDetails[]> {
     try {
         const prompts = await db.prompt.findMany({
             orderBy: {
                 updatedAt: "desc",
             },
+            include: {
+                category: true,
+                tags: true,
+            },
         });
         return prompts;
     } catch (error) {
         console.error("Failed to fetch prompts:", error);
-        // In a real app, you might want to handle this more gracefully
         return [];
     }
 }
@@ -33,19 +37,24 @@ export default async function AdminPage() {
                         <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
                         <p className="mt-2 text-gray-700">Manage your prompt templates</p>
                     </div>
-                    <Link href="/admin/prompts/new">
-                        <Button
-                            variant="gradient"
-                            className="shadow-md hover:shadow-lg transition-all"
-                        >
-                            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                            </svg>
-                            <div className="flex items-center text-black">
-                                Create New Prompt
-                            </div>
-                        </Button>
-                    </Link>
+                    <div className="flex space-x-2">
+                        <Link href="/admin/categories">
+                            <Button variant="outline">Manage Categories</Button>
+                        </Link>
+                        <Link href="/admin/prompts/new">
+                            <Button
+                                variant="gradient"
+                                className="shadow-md hover:shadow-lg transition-all"
+                            >
+                                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                </svg>
+                                <div className="flex items-center text-black">
+                                    Create New Prompt
+                                </div>
+                            </Button>
+                        </Link>
+                    </div>
                 </div>
 
                 {prompts.length === 0 ? (
@@ -80,13 +89,20 @@ export default async function AdminPage() {
                                         </span>
                                     </div>
                                     <CardDescription className="text-gray-600">
-                                        Last updated: {new Date(prompt.updatedAt).toLocaleDateString()}
+                                        {prompt.category?.name} &middot; Last updated: {new Date(prompt.updatedAt).toLocaleDateString()}
                                     </CardDescription>
                                 </CardHeader>
                                 <CardContent>
                                     <p className="line-clamp-3 text-gray-700">
                                         {prompt.content}
                                     </p>
+                                    <div className="mt-4 flex flex-wrap gap-2">
+                                        {prompt.tags.map(tag => (
+                                            <span key={tag.id} className="bg-secondary-100 text-secondary-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
+                                                {tag.name}
+                                            </span>
+                                        ))}
+                                    </div>
                                 </CardContent>
                                 <CardFooter className="flex justify-between items-center bg-white/20 backdrop-blur-sm p-4">
                                     <AdminPromptControls prompt={prompt} />

@@ -8,12 +8,24 @@ import { Textarea } from "@/app/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/app/components/ui/card";
 import { extractVariables, replaceVariables } from "@/app/lib/utils";
 
+interface Category {
+    id: number;
+    name: string;
+}
+
+interface Tag {
+    id: number;
+    name: string;
+}
+
 interface PromptFormProps {
     prompt?: {
         id?: number;
         title: string;
         content: string;
         isPublished: boolean;
+        categoryId?: number;
+        tags?: Tag[];
     };
     mode: "create" | "edit";
 }
@@ -23,12 +35,31 @@ export default function PromptForm({ prompt, mode }: PromptFormProps) {
     const [title, setTitle] = useState(prompt?.title || "");
     const [content, setContent] = useState(prompt?.content || "");
     const [isPublished, setIsPublished] = useState(prompt?.isPublished || false);
+    const [categoryId, setCategoryId] = useState(prompt?.categoryId?.toString() || "");
+    const [tags, setTags] = useState(prompt?.tags?.map(t => t.name).join(', ') || "");
+
+    const [categories, setCategories] = useState<Category[]>([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState("");
 
     // For preview
     const [variables, setVariables] = useState<Record<string, string>>({});
     const [previewContent, setPreviewContent] = useState("");
+
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const res = await fetch('/api/categories');
+                if (!res.ok) throw new Error("Failed to fetch categories");
+                const data = await res.json();
+                setCategories(data);
+            } catch (error) {
+                console.error(error);
+                setError("Could not load categories.");
+            }
+        };
+        fetchCategories();
+    }, []);
 
     // Extract variables from content and update preview
     useEffect(() => {
@@ -47,34 +78,27 @@ export default function PromptForm({ prompt, mode }: PromptFormProps) {
         e.preventDefault();
         setError("");
 
-        if (!title.trim()) {
-            setError("Title is required");
-            return;
-        }
-
-        if (!content.trim()) {
-            setError("Content is required");
+        if (!title.trim() || !content.trim() || !categoryId) {
+            setError("Title, content, and category are required.");
             return;
         }
 
         setIsSubmitting(true);
 
         try {
-            const url = mode === "create"
-                ? "/api/prompts"
-                : `/api/prompts/${prompt?.id}`;
-
+            const url = mode === "create" ? "/api/prompts" : `/api/prompts/${prompt?.id}`;
             const method = mode === "create" ? "POST" : "PUT";
+            const tagsArray = tags.split(',').map(tag => tag.trim()).filter(tag => tag);
 
             const response = await fetch(url, {
                 method,
-                headers: {
-                    "Content-Type": "application/json",
-                },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     title,
                     content,
                     isPublished,
+                    categoryId: parseInt(categoryId),
+                    tags: tagsArray,
                 }),
             });
 
@@ -107,6 +131,37 @@ export default function PromptForm({ prompt, mode }: PromptFormProps) {
                             onChange={(e) => setTitle(e.target.value)}
                             placeholder="Enter prompt title"
                         />
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-1">
+                                Category
+                            </label>
+                            <select
+                                id="category"
+                                value={categoryId}
+                                onChange={(e) => setCategoryId(e.target.value)}
+                                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm h-10"
+                                disabled={categories.length === 0}
+                            >
+                                <option value="" disabled>Select a category</option>
+                                {categories.map(cat => (
+                                    <option key={cat.id} value={cat.id}>{cat.name}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <div>
+                            <label htmlFor="tags" className="block text-sm font-medium text-gray-700 mb-1">
+                                Tags (comma-separated)
+                            </label>
+                            <Input
+                                id="tags"
+                                value={tags}
+                                onChange={(e) => setTags(e.target.value)}
+                                placeholder="e.g. email, marketing, social"
+                            />
+                        </div>
                     </div>
 
                     <div className="mb-6">
@@ -151,16 +206,11 @@ export default function PromptForm({ prompt, mode }: PromptFormProps) {
                             Cancel
                         </Button>
                         <Button type="submit" disabled={isSubmitting}>
-                            {isSubmitting
-                                ? "Saving..."
-                                : mode === "create"
-                                    ? "Create Prompt"
-                                    : "Update Prompt"}
+                            {isSubmitting ? "Saving..." : mode === "create" ? "Create Prompt" : "Update Prompt"}
                         </Button>
                     </div>
                 </form>
             </div>
-
             <div>
                 <Card>
                     <CardHeader>
@@ -170,7 +220,6 @@ export default function PromptForm({ prompt, mode }: PromptFormProps) {
                         <div className="bg-gray-50 p-4 rounded-md whitespace-pre-wrap mb-6">
                             {previewContent}
                         </div>
-
                         {Object.keys(variables).length > 0 && (
                             <div>
                                 <h3 className="text-sm font-medium text-gray-700 mb-2">

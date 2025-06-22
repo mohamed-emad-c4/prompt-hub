@@ -28,21 +28,33 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
     try {
         const body = await request.json();
-        const { title, content, isPublished } = body;
+        const { title, content, isPublished, categoryId, tags } = body;
 
         // Validate required fields
-        if (!title || !content) {
+        if (!title || !content || !categoryId) {
             return NextResponse.json(
-                { error: "Title and content are required" },
+                { error: "Title, content, and category are required" },
                 { status: 400 }
             );
         }
+
+        // Handle tags: find existing or create new ones
+        const tagOperations = tags.map((tagName: string) => {
+            return {
+                where: { name: tagName },
+                create: { name: tagName },
+            };
+        });
 
         const prompt = await db.prompt.create({
             data: {
                 title,
                 content,
                 isPublished: isPublished || false,
+                categoryId,
+                tags: {
+                    connectOrCreate: tagOperations,
+                },
             },
         });
 

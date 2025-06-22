@@ -71,15 +71,22 @@ export async function PUT(request: Request, { params }: RouteParams) {
         }
 
         const body = await request.json();
-        const { title, content, isPublished } = body;
+        const { title, content, isPublished, categoryId, tags } = body;
 
         // Validate required fields
-        if (!title || !content) {
+        if (!title || !content || !categoryId) {
             return NextResponse.json(
-                { error: "Title and content are required" },
+                { error: "Title, content and category are required" },
                 { status: 400 }
             );
         }
+
+        const tagOperations = tags.map((tagName: string) => {
+            return {
+                where: { name: tagName },
+                create: { name: tagName },
+            };
+        });
 
         const updatedPrompt = await db.prompt.update({
             where: {
@@ -89,6 +96,11 @@ export async function PUT(request: Request, { params }: RouteParams) {
                 title,
                 content,
                 isPublished: isPublished || false,
+                categoryId,
+                tags: {
+                    set: [], // Disconnect all existing tags first
+                    connectOrCreate: tagOperations,
+                },
             },
         });
 
