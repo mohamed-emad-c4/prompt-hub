@@ -1,36 +1,101 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# PromptHub - Prompt Management System
+
+A web application built with Next.js and MySQL that allows you to create, manage, and use text prompts with dynamic variables.
+
+## Features
+
+- **Admin Panel** to create, edit, and delete prompt templates
+- **User Interface** for browsing prompts and filling in variables
+- Dynamic variable detection and replacement (using `{{variable}}` syntax)
+- Live preview of prompts with filled variables
+- Copy to clipboard functionality
+- Responsive design for all devices
+
+## Tech Stack
+
+- **Frontend & Backend**: Next.js (App Router)
+- **ORM**: Prisma with MySQL
+- **UI Styling**: Tailwind CSS
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js (v18 or later)
+- MySQL database
+
+### Installation
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/yourusername/prompt-hub.git
+cd prompt-hub
+```
+
+2. Install dependencies:
+
+```bash
+npm install
+```
+
+3. Set up your environment variables:
+
+Create a `.env` file in the root directory with the following content:
+
+```
+DATABASE_URL="mysql://username:password@localhost:3306/prompt-hub"
+```
+
+Replace `username` and `password` with your MySQL credentials.
+
+4. Set up the database:
+
+```bash
+npx prisma migrate dev --name init
+```
+
+5. Start the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+6. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Usage
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Admin Panel
 
-## Learn More
+Access the admin panel at [http://localhost:3000/admin](http://localhost:3000/admin) to:
 
-To learn more about Next.js, take a look at the following resources:
+- Create new prompt templates
+- Edit existing templates
+- Delete templates
+- Publish or unpublish templates
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### User Interface
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The main page at [http://localhost:3000](http://localhost:3000) allows users to:
 
-## Deploy on Vercel
+- Browse published prompts
+- Select a prompt to customize
+- Fill in variables
+- See a live preview of the final prompt
+- Copy the final prompt to clipboard
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Database Schema
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The application uses a simple database schema:
+
+- `Prompt` model:
+  - `id`: integer (primary key)
+  - `title`: string
+  - `content`: text (with `{{variable}}` placeholders)
+  - `isPublished`: boolean
+  - `createdAt`: timestamp
+  - `updatedAt`: timestamp
+
+## License
+
+This project is licensed under the MIT License.
