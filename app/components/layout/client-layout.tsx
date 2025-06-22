@@ -1,10 +1,10 @@
 "use client";
 
-import { ReactNode, useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { Navbar } from "./navbar";
 import { Footer } from "./footer";
 
-export function ClientLayout({ children }: { children: ReactNode }) {
+export function ClientLayout({ children }: { children: React.ReactNode }) {
     const [mounted, setMounted] = useState(false);
 
     // Only show the UI after first client-side render
@@ -12,22 +12,11 @@ export function ClientLayout({ children }: { children: ReactNode }) {
         setMounted(true);
     }, []);
 
-    if (!mounted) {
-        // Return a placeholder with the same structure to avoid layout shift
-        return (
-            <>
-                <header className="border-b border-gray-200 bg-white h-16" />
-                <div className="flex-grow">{children}</div>
-                <footer className="bg-white border-t border-gray-200 py-6" />
-            </>
-        );
-    }
-
     return (
-        <>
-            <Navbar />
-            <div className="flex-grow">{children}</div>
-            <Footer />
-        </>
+        <div className="flex flex-col min-h-screen bg-white">
+            {mounted && <Navbar />}
+            <main className="flex-grow">{children}</main>
+            {mounted && <Footer />}
+        </div>
     );
 } 

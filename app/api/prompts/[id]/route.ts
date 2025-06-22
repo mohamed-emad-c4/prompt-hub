@@ -102,6 +102,37 @@ export async function PUT(request: Request, { params }: RouteParams) {
     }
 }
 
+export async function PATCH(request: Request, { params }: RouteParams) {
+    try {
+        const { id } = params;
+        const promptId = parseInt(id);
+
+        if (isNaN(promptId)) {
+            return NextResponse.json({ error: "Invalid prompt ID" }, { status: 400 });
+        }
+
+        const body = await request.json();
+        const { isPublished } = body;
+
+        if (typeof isPublished !== 'boolean') {
+            return NextResponse.json({ error: "isPublished must be a boolean" }, { status: 400 });
+        }
+
+        const updatedPrompt = await db.prompt.update({
+            where: { id: promptId },
+            data: { isPublished },
+        });
+
+        return NextResponse.json(updatedPrompt);
+    } catch (error) {
+        console.error("Error updating prompt status:", error);
+        return NextResponse.json(
+            { error: "Failed to update prompt status" },
+            { status: 500 }
+        );
+    }
+}
+
 export async function DELETE(request: Request, { params }: RouteParams) {
     try {
         // Ensure params is properly awaited

@@ -36,7 +36,6 @@ export default function PromptForm({ prompt, mode }: PromptFormProps) {
         const newVariables: Record<string, string> = {};
 
         extractedVars.forEach(variable => {
-            // Keep existing values if they exist
             newVariables[variable] = variables[variable] || "sample value";
         });
 
@@ -83,8 +82,9 @@ export default function PromptForm({ prompt, mode }: PromptFormProps) {
                 throw new Error("Failed to save prompt");
             }
 
-            router.push("/admin");
             router.refresh();
+            router.push("/admin");
+
         } catch (error) {
             console.error("Error saving prompt:", error);
             setError("Failed to save prompt. Please try again.");
@@ -150,8 +150,12 @@ export default function PromptForm({ prompt, mode }: PromptFormProps) {
                         >
                             Cancel
                         </Button>
-                        <Button type="submit" isLoading={isSubmitting}>
-                            {mode === "create" ? "Create Prompt" : "Update Prompt"}
+                        <Button type="submit" disabled={isSubmitting}>
+                            {isSubmitting
+                                ? "Saving..."
+                                : mode === "create"
+                                    ? "Create Prompt"
+                                    : "Update Prompt"}
                         </Button>
                     </div>
                 </form>
@@ -184,4 +188,4 @@ export default function PromptForm({ prompt, mode }: PromptFormProps) {
             </div>
         </div>
     );
-} 
+}
