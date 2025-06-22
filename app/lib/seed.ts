@@ -1,9 +1,21 @@
 import { db } from "./db";
+import bcrypt from "bcryptjs";
 
 async function seed() {
     try {
-        // Delete existing data
+        // Clear existing data
         await db.prompt.deleteMany({});
+        await db.user.deleteMany({});
+
+        // Create a default admin user
+        const hashedPassword = await bcrypt.hash("password123", 10);
+        await db.user.create({
+            data: {
+                email: "admin@example.com",
+                password: hashedPassword,
+                isAdmin: true,
+            },
+        });
 
         // Create sample prompts
         const prompts = [

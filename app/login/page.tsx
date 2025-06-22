@@ -18,13 +18,24 @@ export default function LoginPage() {
         setError("");
         setIsLoading(true);
 
-        // Simple authentication - in a real app, you'd use a proper auth system
-        if (username === "admin" && password === "mkomko9090") {
-            // Set a cookie to indicate the admin is authenticated
-            document.cookie = "admin_authenticated=true; path=/; max-age=3600"; // 1 hour
-            router.push("/admin");
-        } else {
-            setError("Invalid username or password");
+        try {
+            const response = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: username, password }),
+            });
+
+            if (response.ok) {
+                document.cookie = "admin_authenticated=true; path=/; max-age=3600"; // 1 hour
+                router.push("/admin");
+            } else {
+                const data = await response.json();
+                setError(data.error || "Invalid username or password");
+            }
+        } catch (err) {
+            setError("An unexpected error occurred. Please try again.");
+            console.error(err);
+        } finally {
             setIsLoading(false);
         }
     };
@@ -131,7 +142,7 @@ export default function LoginPage() {
                         </Button>
                     </CardFooter>
                     <div className="px-6 pb-6 text-center">
-                        
+
                     </div>
                 </Card>
             </div>
