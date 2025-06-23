@@ -2,8 +2,8 @@ import { db } from "@/app/lib/db";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/app/components/ui/card";
 import Link from "next/link";
 
-// Configure this route to use the Edge Runtime
-export const runtime = 'edge';
+// Use Node.js runtime for Prisma compatibility
+export const runtime = 'nodejs';
 
 async function getPublishedPrompts() {
   try {

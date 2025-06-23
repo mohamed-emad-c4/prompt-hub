@@ -1,7 +1,7 @@
 import PromptForm from "../form";
 
-// Configure this route to use the Edge Runtime
-export const runtime = 'edge';
+// Use Node.js runtime for Prisma compatibility
+export const runtime = 'nodejs';
 
 export default function CreatePromptPage() {
     return (

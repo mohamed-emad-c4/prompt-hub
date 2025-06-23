@@ -4,8 +4,8 @@ import { CategoryClientManager } from "./manager";
 import Link from "next/link";
 import { Button } from "@/app/components/ui/button";
 
-// Configure this route to use the Edge Runtime
-export const runtime = 'edge';
+// Use Node.js runtime for Prisma compatibility
+export const runtime = 'nodejs';
 
 async function getCategories() {
     return db.category.findMany({

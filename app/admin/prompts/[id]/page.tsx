@@ -3,8 +3,8 @@ import PromptForm from "../form";
 import { db } from "@/app/lib/db";
 import { Category, Tag } from "@/app/lib/types";
 
-// Configure this route to use the Edge Runtime
-export const runtime = 'edge';
+// Use Node.js runtime for Prisma compatibility
+export const runtime = 'nodejs';
 
 // Define the params type for Next.js 15+
 interface PageProps {

@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { db } from "@/app/lib/db";
 
-// Configure this route to use the Edge Runtime
-export const runtime = 'edge';
+// Use Node.js runtime for Prisma compatibility
+export const runtime = 'nodejs';
 
 interface RouteParams {
     params: {

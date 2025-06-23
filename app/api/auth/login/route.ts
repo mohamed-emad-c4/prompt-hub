@@ -2,8 +2,8 @@ import { NextResponse } from "next/server";
 import { db } from "@/app/lib/db";
 import bcrypt from "bcryptjs";
 
-// Configure this route to use the Edge Runtime
-export const runtime = 'edge';
+// Use Node.js runtime for bcryptjs compatibility
+export const runtime = 'nodejs';
 
 export async function POST(request: Request) {
     try {
