@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { db } from "@/app/lib/db";
 
+// Configure this route to use the Edge Runtime
+export const runtime = 'edge';
+
 interface RouteParams {
     params: {
         id: string;

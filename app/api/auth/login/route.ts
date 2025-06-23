@@ -2,6 +2,9 @@ import { NextResponse } from "next/server";
 import { db } from "@/app/lib/db";
 import bcrypt from "bcryptjs";
 
+// Configure this route to use the Edge Runtime
+export const runtime = 'edge';
+
 export async function POST(request: Request) {
     try {
         const { email, password } = await request.json();

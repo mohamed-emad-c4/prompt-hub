@@ -3,6 +3,9 @@ import PromptForm from "../form";
 import { db } from "@/app/lib/db";
 import { Category, Tag } from "@/app/lib/types";
 
+// Configure this route to use the Edge Runtime
+export const runtime = 'edge';
+
 // Define the params type for Next.js 15+
 interface PageProps {
     params: Promise<{

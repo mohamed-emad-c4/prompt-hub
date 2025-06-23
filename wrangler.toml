@@ -1,0 +1,19 @@
+name = "prompt-hub"
+compatibility_date = "2023-12-01"
+compatibility_flags = ["nodejs_compat"]
+
+[build]
+command = "npm run build"
+
+[site]
+bucket = ".vercel/output/static"
+
+[env.production]
+vars = { ENVIRONMENT = "production" }
+
+[env.development]
+vars = { ENVIRONMENT = "development" }
+
+[[routes]]
+pattern = "/*"
+script = "index.js" 

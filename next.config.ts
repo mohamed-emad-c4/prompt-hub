@@ -11,6 +11,8 @@ const nextConfig: NextConfig = {
     // ✅ Ignore TypeScript errors during build
     ignoreBuildErrors: true,
   },
+  // Configure for Cloudflare Pages
+  swcMinify: true,
 };
 
 export default nextConfig;
