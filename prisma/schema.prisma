@@ -23,7 +23,7 @@ model Prompt {
 
   category   Category? @relation(fields: [categoryId], references: [id])
   categoryId Int?
-  tags       Tag[]     @relation("PromptTags")
+  tags       PromptTag[]
 }
 
 model Category {
@@ -35,7 +35,16 @@ model Category {
 model Tag {
   id       Int      @id @default(autoincrement())
   name     String   @unique
-  prompts  Prompt[] @relation("PromptTags")
+  prompts  PromptTag[]
+}
+
+model PromptTag {
+  prompt   Prompt @relation(fields: [promptId], references: [id])
+  promptId Int
+  tag      Tag    @relation(fields: [tagId], references: [id])
+  tagId    Int
+
+  @@id([promptId, tagId])
 }
 
 model User {
