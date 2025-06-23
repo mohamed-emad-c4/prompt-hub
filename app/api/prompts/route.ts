@@ -42,12 +42,14 @@ export async function POST(request: Request) {
         }
 
         // Handle tags: find existing or create new ones
-        const tagOperations = tags.map((tagName: string) => {
-            return {
-                where: { name: tagName },
-                create: { name: tagName },
-            };
-        });
+        const tagOperations = tags.map((tagName: string) => ({
+            tag: {
+                connectOrCreate: {
+                    where: { name: tagName },
+                    create: { name: tagName },
+                },
+            },
+        }));
 
         const prompt = await db.prompt.create({
             data: {
@@ -56,7 +58,7 @@ export async function POST(request: Request) {
                 isPublished: isPublished || false,
                 categoryId,
                 tags: {
-                    connectOrCreate: tagOperations,
+                    create: tagOperations,
                 },
             },
         });

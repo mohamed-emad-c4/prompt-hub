@@ -16,10 +16,14 @@ async function getPrompts(): Promise<PromptWithDetails[]> {
             },
             include: {
                 category: true,
-                tags: true,
+                tags: {
+                    include: {
+                        tag: true,
+                    },
+                },
             },
         });
-        return prompts;
+        return prompts as PromptWithDetails[];
     } catch (error) {
         console.error("Failed to fetch prompts:", error);
         return [];
@@ -100,9 +104,9 @@ export default async function AdminPage() {
                                         {prompt.content}
                                     </p>
                                     <div className="mt-4 flex flex-wrap gap-2">
-                                        {prompt.tags.map(tag => (
-                                            <span key={tag.id} className="bg-secondary-100 text-secondary-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
-                                                {tag.name}
+                                        {prompt.tags.map(promptTag => (
+                                            <span key={promptTag.tag.id} className="bg-secondary-100 text-secondary-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
+                                                {promptTag.tag.name}
                                             </span>
                                         ))}
                                     </div>

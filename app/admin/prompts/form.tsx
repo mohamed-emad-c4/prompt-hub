@@ -66,16 +66,41 @@ export default function PromptForm({ prompt, mode }: PromptFormProps) {
 
     // Extract variables from content and update preview
     useEffect(() => {
-        const extractedVars = extractVariables(content);
-        const newVariables: Record<string, string> = {};
+        const extracted = extractVariables(content);
 
-        extractedVars.forEach(variable => {
-            newVariables[variable] = variables[variable] || "sample value";
+        setVariables(currentVars => {
+            const newVars: Record<string, string> = {};
+            let hasChanged = false;
+
+            // Check if new variables are different from old ones
+            if (extracted.length !== Object.keys(currentVars).length) {
+                hasChanged = true;
+            } else {
+                for (const key of extracted) {
+                    if (!currentVars.hasOwnProperty(key)) {
+                        hasChanged = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!hasChanged) return currentVars;
+
+            extracted.forEach(v => {
+                newVars[v] = currentVars[v] || "";
+            });
+            return newVars;
         });
 
-        setVariables(newVariables);
-        setPreviewContent(replaceVariables(content, newVariables));
-    }, [content, variables]);
+    }, [content]);
+
+    useEffect(() => {
+        setPreviewContent(replaceVariables(content, variables));
+    }, [content, variables])
+
+    const handleVariableChange = (variable: string, value: string) => {
+        setVariables(prev => ({ ...prev, [variable]: value }));
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -237,14 +262,25 @@ export default function PromptForm({ prompt, mode }: PromptFormProps) {
                         </div>
                         {Object.keys(variables).length > 0 && (
                             <div>
-                                <h3 className="text-sm font-medium text-gray-700 mb-2">
-                                    Variables Detected:
+                                <h3 className="text-lg font-medium text-gray-700 mb-2">
+                                    Fill in the variables:
                                 </h3>
-                                <ul className="list-disc pl-5 text-sm text-gray-600">
+                                <div className="space-y-4 mt-4">
                                     {Object.keys(variables).map((variable) => (
-                                        <li key={variable}>{variable}</li>
+                                        <div key={variable}>
+                                            <label htmlFor={`var-${variable}`} className="block text-sm font-medium text-gray-600">
+                                                {variable}
+                                            </label>
+                                            <Input
+                                                id={`var-${variable}`}
+                                                value={variables[variable]}
+                                                onChange={(e) => handleVariableChange(variable, e.target.value)}
+                                                placeholder={`Enter value for ${variable}`}
+                                                className="mt-1"
+                                            />
+                                        </div>
                                     ))}
-                                </ul>
+                                </div>
                             </div>
                         )}
                     </CardContent>

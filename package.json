@@ -3,16 +3,17 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
     "dev:standard": "next dev",
     "build": "next build",
+    "prebuild": "npx prisma generate",
+    "postinstall": "npx prisma generate",
     "start": "next start",
     "lint": "next lint",
     "prisma:generate": "npx prisma generate",
     "prisma:migrate": "npx prisma migrate dev",
     "prisma:studio": "prisma studio",
     "seed": "ts-node --compiler-options \"{\\\"module\\\":\\\"CommonJS\\\"}\" app/lib/seed.ts",
-    "postinstall": "npx prisma generate",
     "pages:build": "npx @cloudflare/next-on-pages"
   },
   "dependencies": {
