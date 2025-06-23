@@ -65,6 +65,9 @@ model PromptVariable {
   type      VariableType
   options   Json? // For SELECT type
   defaultValue String?
+  textForTrue  String? @db.Text
+  textForFalse String? @db.Text
+
   prompt    Prompt       @relation(fields: [promptId], references: [id], onDelete: Cascade)
   promptId  Int
 }

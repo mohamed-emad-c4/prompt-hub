@@ -55,6 +55,8 @@ export async function POST(request: Request) {
             name: variable.name,
             type: variable.type,
             defaultValue: variable.defaultValue,
+            textForTrue: variable.textForTrue,
+            textForFalse: variable.textForFalse,
             options: variable.options, // Prisma handles JSON serialization
         }));
 

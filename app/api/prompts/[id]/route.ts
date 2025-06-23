@@ -152,6 +152,8 @@ export async function PUT(request: Request, { params }: RouteParams) {
                         name: v.name,
                         type: v.type,
                         defaultValue: v.defaultValue,
+                        textForTrue: v.textForTrue,
+                        textForFalse: v.textForFalse,
                         options: v.options,
                     })),
                 });

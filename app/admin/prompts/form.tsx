@@ -25,6 +25,8 @@ interface PromptVariable {
     type: 'TEXT' | 'BOOLEAN' | 'SELECT';
     options?: string; // Comma-separated for SELECT
     defaultValue?: string;
+    textForTrue?: string;
+    textForFalse?: string;
 }
 
 interface PromptFormProps {
@@ -119,6 +121,8 @@ export default function PromptForm({ prompt, mode }: PromptFormProps) {
         // Reset default value if type is BOOLEAN
         if (field === 'type' && value === 'BOOLEAN') {
             variableToUpdate.defaultValue = 'false';
+            variableToUpdate.textForTrue = '';
+            variableToUpdate.textForFalse = '';
         }
 
 
@@ -165,6 +169,8 @@ export default function PromptForm({ prompt, mode }: PromptFormProps) {
                 name: v.name,
                 type: v.type,
                 defaultValue: v.defaultValue,
+                textForTrue: v.textForTrue,
+                textForFalse: v.textForFalse,
                 // Make sure options are only sent for SELECT type
                 options: v.type === 'SELECT' ? v.options?.split(',').map(s => s.trim()).filter(Boolean) : undefined,
             }));
@@ -304,7 +310,7 @@ export default function PromptForm({ prompt, mode }: PromptFormProps) {
                                                     className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm h-10 border p-2"
                                                 >
                                                     <option value="TEXT">Text</option>
-                                                    <option value="BOOLEAN">Checkbox (True/False)</option>
+                                                    <option value="BOOLEAN">Checkbox (Conditional Text)</option>
                                                     <option value="SELECT">Dropdown</option>
                                                 </select>
                                             </div>
@@ -320,16 +326,36 @@ export default function PromptForm({ prompt, mode }: PromptFormProps) {
                                             </div>
                                         )}
                                         {variable.type === 'BOOLEAN' && (
-                                            <div className="flex items-center space-x-2 pt-2">
-                                                <label className="text-sm font-medium">Default Value:</label>
-                                                <select
-                                                    value={variable.defaultValue}
-                                                    onChange={(e) => updateVariable(index, 'defaultValue', e.target.value)}
-                                                    className="block rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm h-10 border p-2"
-                                                >
-                                                    <option value={'false'}>False</option>
-                                                    <option value={'true'}>True</option>
-                                                </select>
+                                            <div className="space-y-4 pt-4">
+                                                <div>
+                                                    <label className="text-sm font-medium">Default State</label>
+                                                    <select
+                                                        value={variable.defaultValue}
+                                                        onChange={(e) => updateVariable(index, 'defaultValue', e.target.value)}
+                                                        className="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm h-10 border p-2"
+                                                    >
+                                                        <option value={'false'}>Unchecked by default</option>
+                                                        <option value={'true'}>Checked by default</option>
+                                                    </select>
+                                                </div>
+                                                <div>
+                                                    <label className="text-sm font-medium">Text if Checked</label>
+                                                    <Textarea
+                                                        value={variable.textForTrue}
+                                                        onChange={(e) => updateVariable(index, 'textForTrue', e.target.value)}
+                                                        placeholder="e.g., Include a legal disclaimer."
+                                                        className="mt-1"
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="text-sm font-medium">Text if Unchecked (Optional)</label>
+                                                    <Textarea
+                                                        value={variable.textForFalse}
+                                                        onChange={(e) => updateVariable(index, 'textForFalse', e.target.value)}
+                                                        placeholder="e.g., Omit the legal disclaimer."
+                                                        className="mt-1"
+                                                    />
+                                                </div>
                                             </div>
                                         )}
                                         {variable.type === 'SELECT' && (

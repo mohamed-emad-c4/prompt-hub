@@ -16,19 +16,21 @@ interface PromptVariable {
     type: 'TEXT' | 'BOOLEAN' | 'SELECT';
     options: any; // It will be a JSON array of strings for SELECT
     defaultValue: string | null;
+    textForTrue: string | null;
+    textForFalse: string | null;
 }
 
 function VariableControl({ variable, value, onChange }: { variable: PromptVariable, value: string, onChange: (value: string) => void }) {
     switch (variable.type) {
         case 'BOOLEAN':
-            const isChecked = value === 'true';
+            const isChecked = value === (variable.textForTrue || '');
             return (
                 <div className="flex items-center space-x-2">
                     <Switch
                         id={variable.name}
                         checked={isChecked}
                         onCheckedChange={(checked: boolean) => {
-                            onChange(checked ? 'true' : 'false');
+                            onChange(checked ? (variable.textForTrue || '') : (variable.textForFalse || ''));
                         }}
                     />
                     <label htmlFor={variable.name} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 capitalize">
@@ -98,7 +100,12 @@ export default function PromptPage() {
                 const initialValues: Record<string, string> = {};
                 if (fetchedPrompt.variables) {
                     fetchedPrompt.variables.forEach(v => {
-                        initialValues[v.name] = v.defaultValue ?? '';
+                        if (v.type === 'BOOLEAN') {
+                            const isCheckedByDefault = v.defaultValue === 'true';
+                            initialValues[v.name] = isCheckedByDefault ? (v.textForTrue || '') : (v.textForFalse || '');
+                        } else {
+                            initialValues[v.name] = v.defaultValue ?? '';
+                        }
                     });
                 }
                 setVariableValues(initialValues);
