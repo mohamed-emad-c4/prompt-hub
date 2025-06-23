@@ -2,7 +2,7 @@ import Link from "next/link";
 import { db } from "@/app/lib/db";
 import { Button } from "@/app/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/app/components/ui/card";
-import { AdminPromptControls } from "./prompt-controls";
+import { AdminPromptControls } from "@/app/admin/prompt-controls";
 import { PromptWithDetails } from "@/app/lib/types";
 
 // Use Node.js runtime for Prisma compatibility
