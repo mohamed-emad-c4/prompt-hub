@@ -1,5 +1,7 @@
 import { Prisma } from '@prisma/client';
 
+// This validator is used only for type generation
+// @ts-expect-error - used for type generation
 const promptWithDetails = Prisma.validator<Prisma.PromptDefaultArgs>()({
     include: {
         category: true,

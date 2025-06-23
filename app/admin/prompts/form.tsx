@@ -75,7 +75,7 @@ export default function PromptForm({ prompt, mode }: PromptFormProps) {
 
         setVariables(newVariables);
         setPreviewContent(replaceVariables(content, newVariables));
-    }, [content]);
+    }, [content, variables]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();

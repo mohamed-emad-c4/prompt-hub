@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Button } from "@/app/components/ui/button";
 import { Input } from "@/app/components/ui/input";
 
@@ -19,7 +18,6 @@ export function CategoryClientManager({ initialCategories }: CategoryClientManag
     const [newCategoryName, setNewCategoryName] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");
-    const router = useRouter();
 
     const handleCreate = async (e: React.FormEvent) => {
         e.preventDefault();
