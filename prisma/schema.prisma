@@ -16,6 +16,7 @@ datasource db {
 model Prompt {
   id          Int      @id @default(autoincrement())
   title       String   @db.VarChar(255)
+  description String?  @db.Text
   content     String   @db.Text
   isPublished Boolean  @default(false)
   createdAt   DateTime @default(now())

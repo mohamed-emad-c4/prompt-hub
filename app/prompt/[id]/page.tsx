@@ -1,13 +1,14 @@
 "use client";
 
 import { useEffect, useState } from 'react';
+import { useParams } from 'next/navigation';
 import { extractVariables, replaceVariables, PromptVariable } from '@/app/lib/utils';
 import { Input } from '@/app/components/ui/input';
 import { Switch } from '@/app/components/ui/switch';
 import { Textarea } from '@/app/components/ui/textarea';
 import { Button } from '@/app/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/app/components/ui/card';
-import type { PromptWithDetails } from '@/app/lib/types';
+import type { PromptWithDetails, Category } from '@/app/lib/types';
 import Link from 'next/link';
 
 function VariableControl({ variable, value, onChange }: { variable: PromptVariable, value: string, onChange: (value: string) => void }) {
@@ -60,7 +61,11 @@ function VariableControl({ variable, value, onChange }: { variable: PromptVariab
     }
 }
 
-export default function PromptPage({ params }: { params: { id: string } }) {
+export default function PromptPage() {
+    // Use the useParams hook to get the route parameters
+    const params = useParams();
+    const id = params.id as string;
+
     const [prompt, setPrompt] = useState<PromptWithDetails | null>(null);
     const [variables, setVariables] = useState<PromptVariable[]>([]);
     const [variableValues, setVariableValues] = useState<Record<string, string>>({});
@@ -71,7 +76,7 @@ export default function PromptPage({ params }: { params: { id: string } }) {
         const fetchPrompt = async () => {
             setIsLoading(true);
             try {
-                const response = await fetch(`/api/prompts/${params.id}`);
+                const response = await fetch(`/api/prompts/${id}`);
                 if (!response.ok) {
                     throw new Error('Prompt not found');
                 }
@@ -105,7 +110,7 @@ export default function PromptPage({ params }: { params: { id: string } }) {
             }
         };
         fetchPrompt();
-    }, [params.id]);
+    }, [id]);
 
     useEffect(() => {
         if (prompt) {
@@ -125,6 +130,11 @@ export default function PromptPage({ params }: { params: { id: string } }) {
 
     if (isLoading) return <div className="p-8">Loading...</div>;
     if (!prompt) return <div className="p-8">Prompt not found.</div>;
+
+    // Safely access category and tags properties with explicit type casting
+    const category = prompt.category as Category | null;
+    const categoryId = category?.id ?? '';
+    const categoryName = category?.name ?? 'Uncategorized';
 
     return (
         <div className="container mx-auto p-4 md:p-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -156,7 +166,7 @@ export default function PromptPage({ params }: { params: { id: string } }) {
                         <CardTitle>{prompt.title}</CardTitle>
                         <p className="text-sm text-gray-500 pt-2">{prompt.description || 'No description available.'}</p>
                         <div className="pt-2 text-sm text-gray-600">
-                            Category: <Link href={`/category/${prompt.category?.id ?? ''}`} className="font-semibold text-primary-600 hover:underline">{prompt.category?.name ?? 'Uncategorized'}</Link>
+                            Category: <Link href={`/category/${categoryId}`} className="font-semibold text-primary-600 hover:underline">{categoryName}</Link>
                         </div>
                     </CardHeader>
                     <CardContent>

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/app/components/ui/button";
 import { Input } from "@/app/components/ui/input";
+import { Switch } from "@/app/components/ui/switch";
 import { Textarea } from "@/app/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/app/components/ui/card";
 import { extractVariables, replaceVariables } from "@/app/lib/utils";
@@ -23,6 +24,7 @@ interface PromptFormProps {
         id?: number;
         title: string;
         content: string;
+        description?: string | null;
         isPublished: boolean;
         categoryId?: number;
         tags?: Tag[];
@@ -34,6 +36,7 @@ export default function PromptForm({ prompt, mode }: PromptFormProps) {
     const router = useRouter();
     const [title, setTitle] = useState(prompt?.title || "");
     const [content, setContent] = useState(prompt?.content || "");
+    const [description, setDescription] = useState(prompt?.description || "");
     const [isPublished, setIsPublished] = useState(prompt?.isPublished || false);
     const [categoryId, setCategoryId] = useState(prompt?.categoryId?.toString() || "");
     const [tags, setTags] = useState(prompt?.tags?.map(t => t.name).join(', ') || "");
@@ -96,6 +99,7 @@ export default function PromptForm({ prompt, mode }: PromptFormProps) {
                 body: JSON.stringify({
                     title,
                     content,
+                    description,
                     isPublished,
                     categoryId: parseInt(categoryId),
                     tags: tagsArray,
@@ -133,6 +137,19 @@ export default function PromptForm({ prompt, mode }: PromptFormProps) {
                         />
                     </div>
 
+                    <div className="mb-6">
+                        <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+                            Description
+                        </label>
+                        <Textarea
+                            id="description"
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
+                            placeholder="Enter a brief description of the prompt"
+                            className="min-h-[100px]"
+                        />
+                    </div>
+
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                         <div>
                             <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-1">
@@ -142,7 +159,7 @@ export default function PromptForm({ prompt, mode }: PromptFormProps) {
                                 id="category"
                                 value={categoryId}
                                 onChange={(e) => setCategoryId(e.target.value)}
-                                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm h-10"
+                                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm h-10 border p-2"
                                 disabled={categories.length === 0}
                             >
                                 <option value="" disabled>Select a category</option>
@@ -178,12 +195,10 @@ export default function PromptForm({ prompt, mode }: PromptFormProps) {
                     </div>
 
                     <div className="mb-6 flex items-center">
-                        <input
-                            type="checkbox"
+                        <Switch
                             id="isPublished"
                             checked={isPublished}
-                            onChange={(e) => setIsPublished(e.target.checked)}
-                            className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                            onCheckedChange={setIsPublished}
                         />
                         <label htmlFor="isPublished" className="ml-2 block text-sm text-gray-700">
                             Publish this prompt

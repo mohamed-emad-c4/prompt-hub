@@ -14,6 +14,14 @@ async function getPrompt(promptId: number) {
             where: {
                 id: promptId,
             },
+            include: {
+                category: true,
+                tags: {
+                    include: {
+                        tag: true,
+                    }
+                }
+            }
         });
 
         return prompt;
@@ -54,6 +62,9 @@ export default async function EditPromptPage({ params }: EditPromptPageProps) {
                     title: prompt.title,
                     content: prompt.content,
                     isPublished: prompt.isPublished,
+                    description: prompt.description,
+                    categoryId: prompt.categoryId,
+                    tags: prompt.tags.map(p => p.tag),
                 }}
             />
         </div>

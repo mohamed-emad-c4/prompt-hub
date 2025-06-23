@@ -24,6 +24,14 @@ export async function GET(request: Request, { params }: RouteParams) {
             where: {
                 id: promptId,
             },
+            include: {
+                category: true,
+                tags: {
+                    include: {
+                        tag: true
+                    }
+                }
+            }
         });
 
         if (!prompt) {
