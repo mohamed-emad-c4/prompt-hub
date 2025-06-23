@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-// Configure middleware to use the Edge Runtime
-export const runtime = 'edge';
+// Configure middleware to use the experimental Edge Runtime
+export const runtime = 'experimental-edge';
 
 // This is a simple middleware for demo purposes only
 // In a real application, use NextAuth.js or a similar solution
