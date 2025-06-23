@@ -431,13 +431,13 @@ export default function PromptForm({ prompt, mode }: PromptFormProps) {
                                     Test Variables
                                 </h3>
                                 <div className="space-y-4">
-                                    {promptVariables.map((variable) => (
-                                        <div key={variable.name}>
-                                            <label htmlFor={`var-${variable.name}`} className="block text-sm font-medium text-gray-600 capitalize">
+                                    {promptVariables.map((variable, index) => (
+                                        <div key={index}>
+                                            <label htmlFor={`preview-var-${index}`} className="block text-sm font-medium text-gray-600 capitalize">
                                                 {variable.name.replace(/_/g, ' ')}
                                             </label>
                                             <Input
-                                                id={`var-${variable.name}`}
+                                                id={`preview-var-${index}`}
                                                 value={previewVariables[variable.name] || ''}
                                                 onChange={(e) => handlePreviewVariableChange(variable.name, e.target.value)}
                                                 placeholder={`Enter value for ${variable.name}`}
