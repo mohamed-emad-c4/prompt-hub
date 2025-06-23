@@ -205,38 +205,33 @@ export async function PATCH(request: Request, { params }: RouteParams) {
 
 export async function DELETE(request: Request, { params }: RouteParams) {
     try {
-        // Ensure params is properly awaited
         const { id } = params;
         const promptId = parseInt(id);
 
         if (isNaN(promptId)) {
-            return NextResponse.json(
-                { error: "Invalid prompt ID" },
-                { status: 400 }
-            );
+            return NextResponse.json({ error: "Invalid prompt ID" }, { status: 400 });
         }
 
-        // Check if prompt exists
-        const existingPrompt = await db.prompt.findUnique({
-            where: {
-                id: promptId,
-            },
+        // Use a transaction to ensure all related data is deleted
+        await db.$transaction(async (tx) => {
+            // Delete related PromptVariable records
+            await tx.promptVariable.deleteMany({
+                where: { promptId: promptId },
+            });
+
+            // Delete related PromptTag records
+            await tx.promptTag.deleteMany({
+                where: { promptId: promptId },
+            });
+
+            // Finally, delete the prompt itself
+            await tx.prompt.delete({
+                where: { id: promptId },
+            });
         });
 
-        if (!existingPrompt) {
-            return NextResponse.json(
-                { error: "Prompt not found" },
-                { status: 404 }
-            );
-        }
+        return new NextResponse(null, { status: 204 }); // No Content
 
-        await db.prompt.delete({
-            where: {
-                id: promptId,
-            },
-        });
-
-        return NextResponse.json({ success: true });
     } catch (error) {
         console.error("Error deleting prompt:", error);
         return NextResponse.json(

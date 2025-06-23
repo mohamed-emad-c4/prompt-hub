@@ -2,9 +2,10 @@
 
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/app/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/app/components/ui/card';
 import { Input } from '@/app/components/ui/input';
 import { PromptWithDetails, Category } from '@/app/lib/types';
+import { Button } from '@/app/components/ui/button';
 
 interface PromptsListProps {
     prompts: PromptWithDetails[];
@@ -53,24 +54,35 @@ export function PromptsList({ prompts, categories }: PromptsListProps) {
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {filteredPrompts.map(prompt => (
-                        <Link key={prompt.id} href={`/prompt/${prompt.id}`} className="group">
-                            <Card className="h-full hover:shadow-lg transition-shadow duration-300 card-glass">
-                                <CardHeader>
-                                    <CardTitle>{prompt.title}</CardTitle>
-                                    <CardDescription>{prompt.category?.name}</CardDescription>
-                                </CardHeader>
-                                <CardContent>
-                                    <p className="line-clamp-3 text-sm text-gray-600">{prompt.content}</p>
-                                    <div className="mt-4 flex flex-wrap gap-2">
-                                        {prompt.tags.map(promptTag => (
-                                            <span key={promptTag.tag.id} className="text-xs bg-gray-200 text-gray-800 px-2 py-1 rounded-full">
-                                                {promptTag.tag.name}
-                                            </span>
-                                        ))}
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        </Link>
+                        <Card key={prompt.id} className="group flex flex-col">
+                            <CardHeader>
+                                <CardTitle>
+                                    <Link href={`/prompt/${prompt.id}`} className="hover:text-primary-600 transition-colors">
+                                        {prompt.title}
+                                    </Link>
+                                </CardTitle>
+                                <CardDescription className="pt-2 h-12 overflow-hidden">
+                                    {prompt.content}
+                                </CardDescription>
+                            </CardHeader>
+                            <CardFooter className="mt-auto pt-4 flex justify-between items-center">
+                                <div className="flex flex-wrap gap-2">
+                                    {prompt.tags.map(promptTag => (
+                                        <span key={promptTag.tag.id} className="text-xs bg-gray-200 text-gray-800 px-2 py-1 rounded-full">
+                                            {promptTag.tag.name}
+                                        </span>
+                                    ))}
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <Button variant="outline" size="sm" asChild>
+                                        <Link href={`/admin/prompts/${prompt.id}`}>Edit</Link>
+                                    </Button>
+                                    <Button variant="primary" size="sm" asChild>
+                                        <Link href={`/customize/${prompt.id}`}>Use</Link>
+                                    </Button>
+                                </div>
+                            </CardFooter>
+                        </Card>
                     ))}
                 </div>
             )}
