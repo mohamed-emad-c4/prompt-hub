@@ -33,7 +33,8 @@ export async function GET(request: Request, { params }: RouteParams) {
                     include: {
                         tag: true
                     }
-                }
+                },
+                variables: true,
             }
         });
 
@@ -82,7 +83,7 @@ export async function PUT(request: Request, { params }: RouteParams) {
         }
 
         const body = await request.json();
-        const { title, content, isPublished, categoryId, tags } = body;
+        const { title, content, description, isPublished, categoryId, tags, variables } = body;
 
         // Validate required fields
         if (!title || !content || !categoryId) {
@@ -92,27 +93,71 @@ export async function PUT(request: Request, { params }: RouteParams) {
             );
         }
 
-        const tagOperations = tags.map((tagName: string) => {
+        // We're going to do a transaction to handle the tags and variables properly
+        const tagConnectOrCreate = (tags || []).map((tagName: string) => {
             return {
-                where: { name: tagName },
-                create: { name: tagName },
+                where: { promptId_tagId: { promptId, tagId: 0 } }, // This is a placeholder, will be tricky
+                create: { tag: { connectOrCreate: { where: { name: tagName }, create: { name: tagName } } } }
             };
         });
 
-        const updatedPrompt = await db.prompt.update({
-            where: {
-                id: promptId,
-            },
-            data: {
-                title,
-                content,
-                isPublished: isPublished || false,
-                categoryId,
-                tags: {
-                    set: [], // Disconnect all existing tags first
-                    connectOrCreate: tagOperations,
+        const variableOperations = (variables || []).map((variable: any) => ({
+            name: variable.name,
+            type: variable.type,
+            defaultValue: variable.defaultValue,
+            options: variable.options, // Prisma handles JSON serialization
+        }));
+
+        const updatedPrompt = await db.$transaction(async (tx) => {
+            // 1. Update the prompt's scalar fields
+            const prompt = await tx.prompt.update({
+                where: { id: promptId },
+                data: {
+                    title,
+                    content,
+                    description,
+                    isPublished,
+                    categoryId,
                 },
-            },
+            });
+
+            // 2. Clear existing tags and connect the new ones
+            await tx.promptTag.deleteMany({ where: { promptId } });
+            if (tags && tags.length > 0) {
+                const tagIds = await Promise.all(
+                    tags.map(async (name: string) => {
+                        const tag = await tx.tag.upsert({
+                            where: { name },
+                            update: {},
+                            create: { name },
+                        });
+                        return tag.id;
+                    })
+                );
+
+                await tx.promptTag.createMany({
+                    data: tagIds.map((tagId: number) => ({
+                        promptId,
+                        tagId,
+                    })),
+                });
+            }
+
+            // 3. Clear and create variables
+            await tx.promptVariable.deleteMany({ where: { promptId } });
+            if (variables && variables.length > 0) {
+                await tx.promptVariable.createMany({
+                    data: variables.map((v: any) => ({
+                        promptId,
+                        name: v.name,
+                        type: v.type,
+                        defaultValue: v.defaultValue,
+                        options: v.options,
+                    })),
+                });
+            }
+
+            return prompt;
         });
 
         return NextResponse.json(updatedPrompt);

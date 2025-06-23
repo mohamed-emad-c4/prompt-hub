@@ -31,7 +31,7 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
     try {
         const body = await request.json();
-        const { title, content, isPublished, categoryId, tags } = body;
+        const { title, content, description, isPublished, categoryId, tags, variables } = body;
 
         // Validate required fields
         if (!title || !content || !categoryId) {
@@ -42,7 +42,7 @@ export async function POST(request: Request) {
         }
 
         // Handle tags: find existing or create new ones
-        const tagOperations = tags.map((tagName: string) => ({
+        const tagOperations = (tags || []).map((tagName: string) => ({
             tag: {
                 connectOrCreate: {
                     where: { name: tagName },
@@ -51,16 +51,30 @@ export async function POST(request: Request) {
             },
         }));
 
+        const variableOperations = (variables || []).map((variable: any) => ({
+            name: variable.name,
+            type: variable.type,
+            defaultValue: variable.defaultValue,
+            options: variable.options, // Prisma handles JSON serialization
+        }));
+
         const prompt = await db.prompt.create({
             data: {
                 title,
                 content,
+                description,
                 isPublished: isPublished || false,
                 categoryId,
                 tags: {
                     create: tagOperations,
                 },
+                variables: {
+                    create: variableOperations,
+                }
             },
+            include: {
+                variables: true, // Include variables in the response
+            }
         });
 
         return NextResponse.json(prompt, { status: 201 });

@@ -26,6 +26,7 @@ model Prompt {
   category   Category? @relation(fields: [categoryId], references: [id])
   categoryId Int?
   tags       PromptTag[]
+  variables  PromptVariable[]
 }
 
 model Category {
@@ -56,4 +57,20 @@ model User {
   isAdmin   Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model PromptVariable {
+  id        Int          @id @default(autoincrement())
+  name      String
+  type      VariableType
+  options   Json? // For SELECT type
+  defaultValue String?
+  prompt    Prompt       @relation(fields: [promptId], references: [id], onDelete: Cascade)
+  promptId  Int
+}
+
+enum VariableType {
+  TEXT
+  BOOLEAN
+  SELECT
 }
