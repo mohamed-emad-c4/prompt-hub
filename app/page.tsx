@@ -61,16 +61,21 @@ export default async function Home() {
 
         <div className="relative px-4 py-16 sm:px-6 sm:py-24 lg:py-32 lg:px-8">
           <div className="max-w-3xl mx-auto text-center">
-            <h1 className="text-4xl font-extrabold text-black sm:text-5xl lg:text-6xl">
-              Manage Your Prompts
+            <h1 className="text-4xl font-extrabold text-black sm:text-5xl lg:text-6xl tracking-tight">
+              Unleash Your Creativity with <span className=" text-black bg-gradient-to-r from-primary-400 to-accent-400">PromptHub</span>
             </h1>
             <p className="mt-6 text-xl text-primary-100 max-w-2xl mx-auto">
-              Create, manage, and use text prompts with dynamic variables for all your content needs.
+              The ultimate solution for crafting, managing, and deploying powerful AI prompts. Turn your ideas into perfectly structured commands, instantly.
             </p>
-            <div className="mt-10 flex justify-center">
-              <Link href="/admin">
-                <div className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-primary-700 bg-white/90 backdrop-blur-sm hover:bg-white shadow-md hover:shadow-lg transition-all duration-200">
-                  Get Started
+            <div className="mt-10 flex justify-center gap-4">
+              <Link href="/prompts">
+                <div className="inline-flex text-black items-center justify-center px-8 py-4 border border-transparent text-base font-medium rounded-md text-primary-700 backdrop-blur-sm hover:bg-white shadow-md hover:shadow-lg transition-all duration-200  hover:scale-105">
+                  Explore Prompts
+                </div>
+              </Link>
+              <Link href="/#features">
+                <div className="inline-flex text-black items-center justify-center px-8 py-4 border border-white/20 text-base font-medium rounded-md  backdrop-blur-sm hover:bg-white/10 shadow-md hover:shadow-lg transition-all duration-200  hover:scale-105">
+                  Learn More
                 </div>
               </Link>
             </div>
@@ -78,70 +83,8 @@ export default async function Home() {
         </div>
       </div>
 
-      {/* Prompts Section */}
-      <div className="container mx-auto px-4 py-12 sm:py-16 lg:py-20">
-        <div className="mb-12 text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">Browse Prompts</h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Select any prompt to customize it with your own variables.
-          </p>
-        </div>
-
-        {prompts.length === 0 ? (
-          <div className="text-center py-16 bg-white/70 backdrop-blur-sm rounded-xl border border-white/20 shadow-glass">
-            <svg
-              className="mx-auto h-12 w-12 text-gray-400"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              aria-hidden="true"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={1.5}
-                d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m6.75 12l-3-3m0 0l-3 3m3-3v6m-1.5-15H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
-              />
-            </svg>
-            <h3 className="mt-4 text-lg font-medium text-gray-900">No prompts available yet</h3>
-            <p className="mt-2 text-sm text-gray-500">Check back later for new content or create your own in the admin panel.</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {prompts.map((prompt, index) => (
-              <Link key={prompt.id} href={`/prompt/${prompt.id}`} className="group">
-                <Card
-                  glass={index % 3 === 0}
-                  className="h-full hover:shadow-hover transition-all duration-300 group-hover:border-primary-200 overflow-hidden"
-                >
-                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary-500 to-accent-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
-                  <CardHeader>
-                    <CardTitle className="group-hover:text-primary-700 transition-colors">{prompt.title}</CardTitle>
-                    <CardDescription className="text-sm text-gray-500">
-                      Last updated: {new Date(prompt.updatedAt).toLocaleDateString()}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="line-clamp-3 text-gray-600">
-                      {prompt.content.substring(0, 150)}
-                      {prompt.content.length > 150 ? "..." : ""}
-                    </p>
-                    <div className="mt-4 flex items-center text-sm text-primary-600 font-medium">
-                      <span>Customize prompt</span>
-                      <svg className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
-                      </svg>
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
-            ))}
-          </div>
-        )}
-      </div>
-
       {/* Features Section */}
-      <div className="relative bg-gray-50 py-12 sm:py-16 lg:py-20 overflow-hidden">
+      <div id="features" className="relative bg-gray-50 py-12 sm:py-16 lg:py-20 overflow-hidden">
         {/* Decorative elements */}
         <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-primary-100 blur-3xl opacity-50"></div>
         <div className="absolute -bottom-24 -left-24 w-96 h-96 rounded-full bg-accent-100 blur-3xl opacity-50"></div>
@@ -155,7 +98,7 @@ export default async function Home() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <Card glass className="backdrop-blur-sm">
+            <Card className="card-glass">
               <CardContent className="p-6">
                 <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4">
                   <svg className="h-6 w-6 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -169,7 +112,7 @@ export default async function Home() {
               </CardContent>
             </Card>
 
-            <Card glass className="backdrop-blur-sm">
+            <Card className="card-glass">
               <CardContent className="p-6">
                 <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4">
                   <svg className="h-6 w-6 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -184,7 +127,7 @@ export default async function Home() {
               </CardContent>
             </Card>
 
-            <Card glass className="backdrop-blur-sm">
+            <Card className="card-glass">
               <CardContent className="p-6">
                 <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4">
                   <svg className="h-6 w-6 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
