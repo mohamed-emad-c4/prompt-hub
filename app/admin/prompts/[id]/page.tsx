@@ -1,15 +1,34 @@
 import { notFound } from "next/navigation";
 import PromptForm from "../form";
 import { db } from "@/app/lib/db";
+import { Category, Tag } from "@/app/lib/types";
 
-interface EditPromptPageProps {
-    params: {
+// Define the params type for Next.js 15+
+interface PageProps {
+    params: Promise<{
         id: string;
-    };
+    }>;
 }
 
-async function getPrompt(promptId: number) {
+// Define the prompt type with all required properties
+interface PromptWithRelations {
+    id: number;
+    title: string;
+    content: string;
+    description?: string | null;
+    isPublished: boolean;
+    categoryId?: number | null;
+    createdAt: Date;
+    updatedAt: Date;
+    category?: Category | null;
+    tags: Array<{
+        tag: Tag;
+    }>;
+}
+
+async function getPrompt(promptId: number): Promise<PromptWithRelations | null> {
     try {
+        // Use a simpler approach with a type assertion at the end
         const prompt = await db.prompt.findUnique({
             where: {
                 id: promptId,
@@ -22,7 +41,7 @@ async function getPrompt(promptId: number) {
                     }
                 }
             }
-        });
+        }) as PromptWithRelations | null;
 
         return prompt;
     } catch (error) {
@@ -31,9 +50,9 @@ async function getPrompt(promptId: number) {
     }
 }
 
-export default async function EditPromptPage({ params }: EditPromptPageProps) {
-    // Ensure params is properly awaited
-    const { id } = params;
+export default async function EditPromptPage({ params }: PageProps) {
+    // Await the params object to get the id
+    const { id } = await params;
     const promptId = parseInt(id);
 
     if (isNaN(promptId)) {
@@ -63,7 +82,7 @@ export default async function EditPromptPage({ params }: EditPromptPageProps) {
                     content: prompt.content,
                     isPublished: prompt.isPublished,
                     description: prompt.description,
-                    categoryId: prompt.categoryId,
+                    categoryId: prompt.categoryId || undefined,
                     tags: prompt.tags.map(p => p.tag),
                 }}
             />
