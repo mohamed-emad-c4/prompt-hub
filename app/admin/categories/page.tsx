@@ -4,6 +4,9 @@ import { CategoryClientManager } from "./manager";
 import Link from "next/link";
 import { Button } from "@/app/components/ui/button";
 
+// Configure this route to use the Edge Runtime
+export const runtime = 'edge';
+
 async function getCategories() {
     return db.category.findMany({
         orderBy: { name: 'asc' }

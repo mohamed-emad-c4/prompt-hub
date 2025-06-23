@@ -1,5 +1,8 @@
 import PromptForm from "../form";
 
+// Configure this route to use the Edge Runtime
+export const runtime = 'edge';
+
 export default function CreatePromptPage() {
     return (
         <div className="container mx-auto px-4 py-8">

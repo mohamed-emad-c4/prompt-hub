@@ -5,6 +5,9 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { AdminPromptControls } from "./prompt-controls";
 import { PromptWithDetails } from "@/app/lib/types";
 
+// Configure this route to use the Edge Runtime
+export const runtime = 'edge';
+
 async function getPrompts(): Promise<PromptWithDetails[]> {
     try {
         const prompts = await db.prompt.findMany({
