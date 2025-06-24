@@ -9,13 +9,12 @@ const promptWithDetails = Prisma.validator<Prisma.PromptDefaultArgs>()({
             include: {
                 tag: true
             }
-        }
+        },
+        variables: true
     },
 });
 
-export type PromptWithDetails = Prisma.PromptGetPayload<typeof promptWithDetails> & {
-    description?: string | null;
-};
+export type PromptWithDetails = Prisma.PromptGetPayload<typeof promptWithDetails>;
 
 export interface Category {
     id: number;
