@@ -6,7 +6,7 @@ import { Button } from '@/app/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/app/components/ui/card';
 import type { PromptWithDetails } from '@/app/lib/types';
 import Link from 'next/link';
-import { Section } from '../components/layout/section';
+import { Section } from '@/app/components/layout/section';
 
 export default function PromptPage() {
     const params = useParams();
