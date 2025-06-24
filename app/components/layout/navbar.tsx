@@ -56,6 +56,13 @@ export function Navbar() {
                 Prompts
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary-600 group-hover:w-full transition-all duration-300"></span>
             </Link>
+            <Link
+                href="/docs"
+                className="text-gray-700 hover:text-primary-600 font-medium transition-colors relative group"
+            >
+                Docs
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary-600 group-hover:w-full transition-all duration-300"></span>
+            </Link>
             {isAuthenticated ? (
                 <Button
                     variant="outline"
