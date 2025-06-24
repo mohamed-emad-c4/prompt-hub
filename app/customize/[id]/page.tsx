@@ -80,7 +80,7 @@ export default function CustomizePage() {
         <div className="container mx-auto px-4 py-8">
             <div className="mb-8 flex justify-between items-center flex-wrap gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold">Customize Prompt</h1>
+                    <h1 className="text-3xl font-bold pt-10">Customize Prompt</h1>
                     <p className="text-gray-500 dark:text-gray-400 mt-1">
                         Adjust the variables to generate your desired output.
                     </p>

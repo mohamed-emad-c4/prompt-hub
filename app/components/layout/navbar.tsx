@@ -4,11 +4,15 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "../ui/button";
+import { Logo } from "../ui/logo";
+import { MenuIcon } from "../icons/menu-icon";
+import { cn } from "@/app/lib/utils";
 
 export function Navbar() {
     const router = useRouter();
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [scrolled, setScrolled] = useState(false);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     useEffect(() => {
         // Check if admin is authenticated
@@ -36,69 +40,71 @@ export function Navbar() {
         router.push("/");
     };
 
+    const navLinks = (
+        <>
+            <Link
+                href="/"
+                className="text-gray-700 hover:text-primary-600 font-medium transition-colors relative group"
+            >
+                Home
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary-600 group-hover:w-full transition-all duration-300"></span>
+            </Link>
+            <Link
+                href="/prompts"
+                className="text-gray-700 hover:text-primary-600 font-medium transition-colors relative group"
+            >
+                Prompts
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary-600 group-hover:w-full transition-all duration-300"></span>
+            </Link>
+            {isAuthenticated ? (
+                <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleLogout}
+                    className="border-gray-200 hover:bg-gray-50 hover:text-primary-600 transition-all"
+                >
+                    Logout
+                </Button>
+            ) : (
+                <Link href="/login">
+                    <Button
+                        variant="primary"
+                        size="sm"
+                        className="bg-primary-600 hover:bg-primary-700 text-black shadow-sm hover:shadow transition-all"
+                    >
+                        Login
+                    </Button>
+                </Link>
+            )}
+        </>
+    );
+
     return (
         <header className="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
             <nav
-                className={`container mx-auto px-6 py-3 flex justify-between items-center transition-all duration-300 ${scrolled
-                    ? 'bg-white/70 backdrop-blur-md shadow-soft rounded-2xl mt-4'
-                    : 'bg-transparent shadow-none mt-2'
-                    }`}
+                className={cn(`container mx-auto px-4 sm:px-6 lg:px-8 transition-all duration-300`, {
+                    'bg-white/70 backdrop-blur-md shadow-soft rounded-2xl mt-4': scrolled || isMobileMenuOpen,
+                    'bg-transparent shadow-none mt-2': !scrolled && !isMobileMenuOpen,
+                })}
             >
-                <Link href="/" className="flex items-center space-x-2 text-2xl font-bold text-gray-800">
-                    <svg
-                        className="w-8 h-8 text-primary-600"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={1.5}
-                        stroke="currentColor"
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M15.75 19.5L8.25 12l7.5-7.5"
-                        />
-                    </svg>
-                    <span className="text-xl font-bold bg-clip-text  bg-gradient-to-r from-primary-600 to-primary-800">
-                        PromptHub
-                    </span>
-                </Link>
-                <div className="flex items-center space-x-6">
-                    <Link
-                        href="/"
-                        className="text-gray-700 hover:text-primary-600 font-medium transition-colors relative group"
-                    >
-                        Home
-                        <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary-600 group-hover:w-full transition-all duration-300"></span>
-                    </Link>
-                    <Link
-                        href="/prompts"
-                        className="text-gray-700 hover:text-primary-600 font-medium transition-colors relative group"
-                    >
-                        Prompts
-                        <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary-600 group-hover:w-full transition-all duration-300"></span>
-                    </Link>
-                    {isAuthenticated ? (
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={handleLogout}
-                            className="border-gray-200 hover:bg-gray-50 hover:text-primary-600 transition-all"
-                        >
-                            Logout
-                        </Button>
-                    ) : (
-                        <Link href="/login">
-                            <Button
-                                variant="primary"
-                                size="sm"
-                                className="bg-primary-600 hover:bg-primary-700 text-black shadow-sm hover:shadow transition-all"
-                            >
-                                Login
-                            </Button>
-                        </Link>
-                    )}
+                <div className="flex justify-between items-center py-3">
+                    <Logo />
+                    <div className="hidden md:flex items-center space-x-6">
+                        {navLinks}
+                    </div>
+                    <div className="md:hidden">
+                        <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="text-gray-800 hover:text-primary-600">
+                            <MenuIcon className="w-6 h-6" />
+                        </button>
+                    </div>
                 </div>
+                {isMobileMenuOpen && (
+                    <div className="md:hidden py-4 border-t border-gray-200/50">
+                        <div className="flex flex-col space-y-4">
+                            {navLinks}
+                        </div>
+                    </div>
+                )}
             </nav>
         </header>
     );

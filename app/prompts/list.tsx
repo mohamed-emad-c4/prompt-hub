@@ -74,10 +74,8 @@ export function PromptsList({ prompts, categories }: PromptsListProps) {
                                     ))}
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <Button variant="outline" size="sm" asChild>
-                                        <Link href={`/admin/prompts/${prompt.id}`}>Edit</Link>
-                                    </Button>
-                                    <Button variant="primary" size="sm" asChild>
+                                    
+                                    <Button  variant="primary" size="sm" asChild>
                                         <Link href={`/customize/${prompt.id}`}>Use</Link>
                                     </Button>
                                 </div>

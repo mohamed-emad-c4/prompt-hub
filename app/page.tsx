@@ -1,6 +1,11 @@
 import { db } from "@/app/lib/db";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/app/components/ui/card";
 import Link from "next/link";
+import { Button } from "@/app/components/ui/button";
+import { Section } from "@/app/components/layout/section";
+import { EditIcon } from "@/app/icons/edit-icon";
+import { EyeIcon } from "@/app/icons/eye-icon";
+import { CopyIcon } from "@/app/icons/copy-icon";
 
 // Use Node.js runtime for Prisma compatibility
 export const runtime = 'nodejs';
@@ -59,39 +64,39 @@ export default async function Home() {
         <div className="absolute top-1/4 left-1/4 w-64 h-64 rounded-full bg-primary-400/20 blur-3xl animate-float"></div>
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full bg-secondary-400/20 blur-3xl animate-float" style={{ animationDelay: '2s' }}></div>
 
-        <div className="relative px-4 py-16 sm:px-6 sm:py-24 lg:py-32 lg:px-8">
-          <div className="max-w-3xl mx-auto text-center">
+        <Section>
+          <div className="text-center">
             <h1 className="text-4xl font-extrabold text-black sm:text-5xl lg:text-6xl tracking-tight">
-              Unleash Your Creativity with <span className=" text-black bg-gradient-to-r from-primary-400 to-accent-400">PromptHub</span>
+              Unleash Your Creativity with <span className="bg-clip-text text-black bg-gradient-to-r from-primary-400 to-accent-400">PromptHub</span>
             </h1>
-            <p className="mt-6 text-xl text-primary-100 max-w-2xl mx-auto">
+            <p className="mt-6 text-lg sm:text-xl text-primary-100 max-w-2xl mx-auto">
               The ultimate solution for crafting, managing, and deploying powerful AI prompts. Turn your ideas into perfectly structured commands, instantly.
             </p>
-            <div className="mt-10 flex justify-center gap-4">
-              <Link href="/prompts">
-                <div className="inline-flex text-black items-center justify-center px-8 py-4 border border-transparent text-base font-medium rounded-md text-primary-700 backdrop-blur-sm hover:bg-white shadow-md hover:shadow-lg transition-all duration-200  hover:scale-105">
+            <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Button asChild size="lg" className="w-full sm:w-auto bg-white text-primary-700 hover:bg-gray-100 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+                <Link href="/prompts">
                   Explore Prompts
-                </div>
-              </Link>
-              <Link href="/#features">
-                <div className="inline-flex text-black items-center justify-center px-8 py-4 border border-white/20 text-base font-medium rounded-md  backdrop-blur-sm hover:bg-white/10 shadow-md hover:shadow-lg transition-all duration-200  hover:scale-105">
+                </Link>
+              </Button>
+              <Button asChild size="lg" variant="outline" className="w-full sm:w-auto border-white/40 text-black hover:bg-white/10 hover:text-white backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+                <Link href="/#features">
                   Learn More
-                </div>
-              </Link>
+                </Link>
+              </Button>
             </div>
           </div>
-        </div>
+        </Section>
       </div>
 
       {/* Features Section */}
-      <div id="features" className="relative bg-gray-50 py-12 sm:py-16 lg:py-20 overflow-hidden">
+      <Section id="features" className="bg-gray-50 overflow-hidden">
         {/* Decorative elements */}
         <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-primary-100 blur-3xl opacity-50"></div>
         <div className="absolute -bottom-24 -left-24 w-96 h-96 rounded-full bg-accent-100 blur-3xl opacity-50"></div>
 
         <div className="container relative mx-auto px-4 z-10">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Key Features</h2>
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Key Features</h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
               Everything you need to manage and use dynamic text prompts
             </p>
@@ -142,7 +147,7 @@ export default async function Home() {
             </Card>
           </div>
         </div>
-      </div>
+      </Section>
     </>
   );
 }
